@@ -48,6 +48,11 @@ server.get("/api/users/:id", (req, res) => {
 
 server.post("/api/users", (req, res) => {
     const hubinfo = req.body;
+    const { name, bio } = req.body;
+
+    if(!name || !bio) {
+        res.status(400).json({ errorMessage: "Please provide name and bio for the user." })
+    }
 
     db.insert(hubinfo).then(hub => {
         res.status(201).json({ hub})
