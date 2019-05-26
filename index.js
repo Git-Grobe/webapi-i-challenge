@@ -45,20 +45,6 @@ server.get("/api/users/:id", (req, res) => {
 
 // POST
 
-// server.post("/api/users", (req, res) => {
-//     const userinfo = req.body;
-
-//     db.insert(userinfo).then(user => {
-//         res.status(201).json({
-//             user
-//         })
-//     }).catch(error => {
-//         res.status(500).json({
-//             error: "There was an error while saving the user to the database"
-//         })
-//     })
-
-// })
 
 server.post("/api/users", (req, res) => {
     const hubinfo = req.body;
@@ -75,13 +61,22 @@ server.post("/api/users", (req, res) => {
 
 // PUT
 
-server.post("/api/users/:id", (req, res) => {
-    const hubinfo = req.body;
+server.put('/api/users/:id', (req, res) => {
+    const {id} = req.params;
+    const changes = req.body
 
-    db.add(hubinfo).then(hub => {
-        res.status(201).json({ sucess: true, hub})
-    }).catch(error => {
-        res.status(500).json({ sucess:false, error})
+    db.update(id, changes).then(updated => {
+        if (updated) {
+            res.status(200).json({ updated })
+        } else {
+            res.status(404).json({
+                message: "The user with the specified ID does not exist."
+            })
+        }
+    }).catch(err => {
+        res.status(500).json({
+            error: "The user information could not be modified."
+        })
     })
 })
 
